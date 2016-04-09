@@ -1,0 +1,19 @@
+{
+  "name": "angularjs_auth",
+  "version": "0.0.0",
+  "description": "Auth0 and AngularJS Basics",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/belcurv/angularjs_auth.git"
+  },
+  "author": "JRS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belcurv/angularjs_auth/issues"
+  },
+  "homepage": "https://github.com/belcurv/angularjs_auth#readme"
+}
