@@ -25,6 +25,37 @@ The traditional session cookie approach has some issues when building modern app
 3.  Coockies don't flow downstream.  Our server might rely on downstream servers.
 4.  We want to be able to write an API that can be used across vaious different applications (web, mobile, etc.) and cookies aren't a good fit for this.
 
-What about the front-end?
+What about the front-end?  In a good Angular setup our app doesn't have any kind of stateful connection to the backend. Instead it's going to satisfy its data needs via XHR.  So what do we want in AngularJS authentication?
 
-1.  In a good Angular setup our app doesn't have any kind of 
+1.  Route access should be controlled.
+2.  Need some indication of authentication.
+3.  Conditionally show/hide UI elements depending on the user's authentication status.
+
+How can Angular know if the user is authenticated without a session?  How can we authenticate at all without sessions, cookies and state?  **JSON Web Tokens**
+
+## JSON Web Tokens
+
+It's and open standard under RFC that describes a way to securely transmit 'claims' between two parties.  JWTs communicate JSON objects, one of which is a claim: a piece of info that's asserted about a subject.  For the purpose of authentication, that subject is a user.
+
+Auth0 has a nice site: jwt.io.  It has a debugger and encode/decode feature.
+
+JWT has three parts:
+
+1.  Header: the algorithm and token type
+2.  Payload: the data - _the claims_.  
+3.  Signature: takes the encoded header + encoded payload + a secret, and hashes it using algorithm specified in the header.
+
+How are JWT used for authentication in Angular apps?
+
+1.  User sends creds to a server
+2.  In response, sever sends user JWT
+3.  Subsequent client requests for secured resources include the JWT in the request header
+
+The JWT is attached to the Authorization header using a "bearer" scheme.  `Authorization: Bearer <token>`.  HTTP requests just need to attach an extra header which includes the JWT.
+
+## Using Auth0 Authentication 'Brokerage'
+
+Auth0 offloads the tricky parts of authentication for us.  Basically Auth0 has our user database.  Our app's login feature sends credentials to Autho0, and if everything checks out they'll get a JWT back from Auth0.  After that we can use the JWT to secure our own server.
+
+Auth0 can do social login, multi-factor, single sign-on, passwordless login.
+
