@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/belcurv/angularjs_auth#readme",
   "dependencies": {
+    "cors": "^2.7.1",
     "express": "^4.13.4",
+    "express-jwt": "^3.3.0",
     "morgan": "^1.7.0"
   }
 }
