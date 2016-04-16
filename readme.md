@@ -1,3 +1,18 @@
+#### Navigation
+
+* [SHIT WE NEED TO DO](https://bitbucket.org/belcurv/album_app/wiki/Home#markdown-header-shit-we-need-to-do)
+
+* [TOOLS TO GET IT DONE](https://bitbucket.org/belcurv/album_app/wiki/Home#markdown-header-tools)
+
+* [JSON Web Tokens](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#JSON-Web-Tokens)
+* [Using Auth0 Authentication Brokerage](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Using-Auth0-Authentication-Brokerage)
+* [Creating the AngularJS Front-End App](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Creating-the-AngularJS-Front-End-App)
+* [Create a Simple NodeJS Back End with Express](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Create-a-Simple-NodeJS-Back-End-with-Express)
+* [Login and Logout](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Login-and-Logout)
+* [Sending Authenticated HTTP Requests](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Sending-Authenticated-HTTP-Requests)
+* [Preserving Authentication on the Front End](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Preserving-Authentication-on-the-Front-End)
+* [What Happens if a Token Expires While We're in the App?](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#What-Happens-if-a-Token-Expires-While-Were-in-the-App)
+
 ## AngularJS Authentication
 
 What this course is about: **How to authenticate our apps with JSON web tokens**.
@@ -519,16 +534,287 @@ Back in `/public/js/app.js`:
         };
 ```
 
-In the above, the .tokenGetter method goes to local storage to get to token and give it to the jwtInterceptorProvider, which attaches it to our HTTP request.
+In the above, the .tokenGetter method goes to local storage to get to token and gives it to the jwtInterceptorProvider, which attaches it to our HTTP request.
 
-Then we have to push our interceptor on to the array of default interceptors that come with Angular.  Down at the end of our app.js:
+Then we have to push our interceptor on to the array of default http interceptors that come with Angular.  Down at the end of our app.js:
 
 ```javascript
     $httpProvider.interceptors.push('jwtInterceptor');
 ```
 
-Note that we're pushing on 'jwtInterceptor', which is the name of the interceptor as defined in angular-jwt, and not actually the provider.
+Note that we're pushing on 'jwtInterceptor', which is the name of the interceptor as defined in angular-jwt, and not actually the provider that we just configured.
 
-### Build Out the Controller
+#### Build Out the Profile Controller
 
-Section 4, Lecture 10
+Back in `public/components/profile/profile.ctr.js`, our profile controller currently looks like this:
+
+```javascript
+    (function () {    
+        'use strict';
+
+        angular
+            .module('authApp')
+            .controller('profileController', profileController);
+
+        function profileController($http) {
+            var vm = this;        
+        }
+
+    })();
+```
+
+We're going to need to attach some more properties and functions to `vm`.  As before, we attach them and then define them down below:
+
+1.  We want a function to **get our public messages** from our public end-point
+    ```
+    vm.getMessage = getMessage;
+    ```
+    The function uses a $http get request to our public endpoint.  We config $http to NOT include our authorization header.  We don't need to send our JWT for these requests.  This we add `skipAuthorization: true` to the object that is the 2nd argument of the $http.get request.  $http.get returns a promise, so we chain some .thens.  We use the promise response to capture the returned data, and we set vm.message to that response.
+    
+2.  We want a function to **get our private messages** from our private end-point
+    ```
+    vm.getSecretMessage = getSecretMessage;
+    ```
+    This is mostly identical to the above, but this time we don't skip authentication (we omit `skipAuthorization`).
+    
+3.  We want a property to **hold our messages** (the data coming back from the end point)
+    ```
+    vm.message;
+    ```
+4.  We want a profile property for our user.  This will get the profile object from local storage. To use it, we also need to inject `store`.  The profile property gives us access to the user's email, their nickname & their profile photo so we can use them in our template:
+    ```
+    vm.profile = store.get('profile');
+    ```
+
+After adding the above mappings and setting up our functions.  Our Profile controller becomes:
+
+```javascript
+    (function () {    
+        'use strict';
+
+        angular
+            .module('authApp')
+            .controller('profileController', profileController);
+
+        function profileController($http, store) {
+            var vm = this;
+            vm.getMessage = getMessage;
+            vm.getSecretMessage = getSecretMessage;
+            vm.message;
+            
+            vm.profile = store.get('profile');
+            
+            function getMessage () {
+                $http.get('http://localhost:3000/api/public', {
+                    skipAuthorization: true
+                }).then(function(response) {
+                    vm.message = response.data.message;
+                });
+            }
+            
+            function getSecretMessage () {
+                $http.get('http://localhost:3000/api/private')
+                    .then(function (response) {
+                    vm.message = response.data.message
+                    });
+            }
+        }
+
+    })();
+```
+
+Now we can edit our `/public/components/profile/profile.tpl.html` template:
+
+```
+<md-content class="md-padding" layout="column">
+    <md-card>
+        <md-card-title>
+            <md-card-title-media>
+                <div class="md-media-lg card-media" layout-padding>
+                    <img ng-source="{{ user.profile.picture }}" alt="profile-picture">
+                </div>
+                <md-card-actions layout="column" layout-align="end center">
+                    <md-button ng-click="user.getMessage()">
+                        Get Message
+                    </md-button>
+                    <md-button ng-click="user.getSecretMessage()">
+                        Get Secret Message
+                    </md-button>
+                </md-card-actions>
+            </md-card-title-media>
+            <md-card-title-text>
+                <span class="md-headline">{{ user.profile.nickname }}</span>
+                <span class="subhead"> {{ user.profile.email }} </span>
+                <h3>{{ user.message }}</h3>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>
+```
+
+Remember, the controller for the profile view is aliased to 'user', so all the above functions and model bindings are prefixed with `user`.
+
+*   What ever is **vm.message** in the controller, is templated as **user.message** in the view.
+*   What ever is **vm.profile** in the controller, is templated as **user.profile** in the view.
+
+### Preserving Authentication on the Front End
+
+Ok, this all works: we can log in, we get a JWT from Auth0, it's stored in local storage, and authenticated users can view private messages.  But there's a problem.  If we refresh the page we kinda lose our state.  The 'isAuthenticated' boolean that's sitting on the auth service gets flipped to its default, which is 'false'.
+
+Ideally in an AngularJS app there shouldn't be a lot of refreshing, but it could happen.  And if a user leaves the app (closes a tab) and later comes back to it, and their JWT is still valid, they'll be prompted to login again even though their token is still valid.  This isn't a good user experience.
+
+Instead, we want to _persist our state_.  We'll do it by adding logic that watches for changes to our location, and when location changes the app will check to see if the user still has a valid JWT in local storage.  If they do, we'll remind the Angular app that the user is still authenticated.
+
+In `/public/js/app.js` we tap into the `.run()` block.  We already have a `.config` block; we'll chain the `.run` block to/after it:
+
+```javascript
+    (function () {
+        'use strict';
+
+        angular
+            .module('authApp', ['auth0', 'angular-storage', 'angular-jwt', 'ngMaterial', 'ui.router'])
+
+            .config(function ($provide, authProvider, $urlRouterProvider, $stateProvider, $httpProvider, jwtInterceptorProvider) {
+                // blah blah config code
+            })  // <- GET RID OF THE SEMICOLON BEFORE CHAINING RUN BLOCK
+
+            .run(function ($rootScope, auth, store, jwtHelper, $location) {
+
+                $rootScope.$on('$locationChangeStart', function () {
+
+                    var token = store.get('id_token');
+                    if (token) {
+                        if (!jwtHelper.isTokenExpired(token)) {
+                            if (!auth.isAuthenticated) {
+                                auth.authenticate(store.get('profile'), token);
+                            }
+                        }
+                    } else {
+                        $location.path('/home');
+                    }
+                });
+            });
+
+    })();
+```
+
+In a `.run()` block we define logic that we want to have happen after the application is already running.  `.run` takes a function where we inject any dependencies we need:
+
+1.  **$rootScope**: the spot where we watch for changes.  
+2.  **auth**: auth service
+3.  **store**: local storage service
+4.  **jwtHelper**: service coming from angular-jwt that gives us some tools for inspecting JWTs.
+5.  **$location**: allows us to navigate to a different spot in our application. We use it to redirect to /home if no valid token.
+
+We use the `$rootScopt.on()` method to watch for a location change event: 'locationChangeStart'. That will trigger any time we move to a new location/route in the app, or any time the page gets refreshed. 
+
+The 2nd paramter is our callback.  We first try to get a token from local storage:
+
+```javascript
+    var token = store.get('id_token');
+```
+
+Then we use nested conditionals to:
+1.  check whether 'id_token' exists:
+    ```javascript
+    var token = store.get('id_token');
+    if (token) {
+        // do work
+    }
+    ```
+2.  if that's true, we check if the token is NOT expired:
+    ```javascript
+    var token = store.get('id_token');
+    if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+            // do work
+        }
+    }
+    ```
+3.  if those are both true, we check if the user is NOT authenticated:
+    ```javascript
+    var token = store.get('id_token');
+     if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+            if (!auth.isAuthenticated) {
+
+                // then authenticate the user
+                auth.authenticate(store.get('profile'), token);
+            }
+        }
+    }
+    ```
+
+Describing the conditionals...  IF there is a token, and IF that token is not expired, and IF the user is not currently authenticated, THEN authenticate them.
+
+If the above conditionals fail, our else {} block redirect the user to the `/home` route so they can log in again.
+
+### What Happens if a Token Expires While We're in the App?
+
+That signals that the user needs to log back in.  We do this by wiring up a **http interceptor** that looks for a status code (401, for example).  If that status code is received by the front-end, it will log the user out and redirect them to the `/home` route where they can log in again.
+
+We set this up in the `.config()` block of our `/public/js/app.js` file.  We write a function (redirect) to do this.  The function takes some paramters/dependencies:
+
+1.  **q**: the async service from AngularJS
+2.  **$injector**: AngularJS service
+3.  **auth**: our auth service
+4.  **store**: local storage
+5.  **$location**: for route changes
+
+Abridged app.js:
+
+```javascript
+    .config(function ($provide, authProvider, $urlRouterProvider, $stateProvider, $httpProvider, jwtInterceptorProvider) {
+        
+            authProvider.init(...);
+        
+            jwtInterceptorProvider.tokenGetter = function (store) {...};
+
+            $urlRouterProvider.otherwise('/home');
+        
+            $stateProvider
+                .state('home', {...})
+                .state('profile', {...});
+        
+            function redirect($q, $injector, auth, store, $location) {
+                return {
+                    responseError: function(rejection) {
+                        if (rejection.status === 401) {
+                            auth.signout();
+                            store.remove('profile');
+                            store.remove('id_token');
+                            $location.path('/home');
+                        }
+                        
+                        return $q.reject(rejection);
+                    }
+                }
+            }
+        
+            $provide.factory('redirect', redirect);
+            $httpProvider.interceptors.push('redirect');
+            ...
+```
+
+The `redirect` function returns an object containing at least one property: `responseError`.  `responseError` equals a function that receives the rejection if there's one present.  If we get one, and its status is 401, then we:
+
+1.  log the user out (`auth.signout()`),
+2.  remove their profile and token from local storage
+3.  send the user back to the '/home' route
+4.  return a rejection from $q (`return $q.reject(rejection)`).
+
+That's what we want to happen if a 401 rejection comes back, but we still need to let Angular know about this interceptor.  To do this, we make a **factory** out of it with the $provide service:
+
+```javascript
+    $provide.factory('redirect', redirect);
+```
+
+That creates a factory called 'redirect' that takes our redirect function.  Then we need to push our 'redirect' factory on to the array of default http interceptors:
+
+```javascript
+    $httpProvider.interceptors.push('redirect');
+```
+
+Ryan tests the above by logging in, displaying a private message, manually deleting a few characters of the local JWT using Chrome dev tools, and refreshing the page.  It works: he is redirected to the '/home' route.  And the 401 (Unauthorized) error is logged to dev tools console.
+
+#### The remaining lectures discus social login & multi-factor.
