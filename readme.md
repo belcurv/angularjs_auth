@@ -1,13 +1,13 @@
 #### Navigation
 
-* [JSON Web Tokens](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#JSON-Web-Tokens)
-* [Using Auth0 Authentication Brokerage](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Using-Auth0-Authentication-Brokerage)
-* [Creating the AngularJS Front-End App](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Creating-the-AngularJS-Front-End-App)
-* [Create a Simple NodeJS Back End with Express](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Create-a-Simple-NodeJS-Back-End-with-Express)
-* [Login and Logout](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Login-and-Logout)
-* [Sending Authenticated HTTP Requests](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Sending-Authenticated-HTTP-Requests)
-* [Preserving Authentication on the Front End](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Preserving-Authentication-on-the-Front-End)
-* [What Happens if a Token Expires While We're in the App?](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#What-Happens-if-a-Token-Expires-While-Were-in-the-App)
+* [JSON Web Tokens](#JSON-Web-Tokens)
+* [Using Auth0 Authentication Brokerage](#Using-Auth0-Authentication-Brokerage)
+* [Creating the AngularJS Front-End App](#Creating-the-AngularJS-Front-End-App)
+* [Create a Simple NodeJS Back End with Express](#Create-a-Simple-NodeJS-Back-End-with-Express)
+* [Login and Logout](#Login-and-Logout)
+* [Sending Authenticated HTTP Requests](#Sending-Authenticated-HTTP-Requests)
+* [Preserving Authentication on the Front End](#Preserving-Authentication-on-the-Front-End)
+* [What Happens if a Token Expires While We're in the App?](#What-Happens-if-a-Token-Expires-While-Were-in-the-App)
 
 ## AngularJS Authentication
 
