@@ -3,11 +3,11 @@
 * [JSON Web Tokens](#json-web-tokens)
 * [Using Auth0 Authentication Brokerage](#using-auth0-authentication-brokerage)
 * [Creating the AngularJS Front-End App](#creating-the-angularjs-front-end-app)
-* [Create a Simple NodeJS Back End with Express](#Create-a-Simple-NodeJS-Back-End-with-Express)
-* [Login and Logout](#Login-and-Logout)
-* [Sending Authenticated HTTP Requests](#Sending-Authenticated-HTTP-Requests)
-* [Preserving Authentication on the Front End](#Preserving-Authentication-on-the-Front-End)
-* [What Happens if a Token Expires While We're in the App?](#What-Happens-if-a-Token-Expires-While-Were-in-the-App)
+* [Create a Simple NodeJS Back End with Express](#create-a-simple-nodejs-back-end-with-express)
+* [Login and Logout](#login-and-logout)
+* [Sending Authenticated HTTP Requests](#sending-authenticated-http-requests)
+* [Preserving Authentication on the Front End](#preserving-authentication-on-the-front-end)
+* [What Happens if a Token Expires While We're in the App?](#what-happens-if-a-token-expires-while-were-in-the-app)
 
 ## AngularJS Authentication
 
