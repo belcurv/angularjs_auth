@@ -1,9 +1,5 @@
 #### Navigation
 
-* [SHIT WE NEED TO DO](https://bitbucket.org/belcurv/album_app/wiki/Home#markdown-header-shit-we-need-to-do)
-
-* [TOOLS TO GET IT DONE](https://bitbucket.org/belcurv/album_app/wiki/Home#markdown-header-tools)
-
 * [JSON Web Tokens](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#JSON-Web-Tokens)
 * [Using Auth0 Authentication Brokerage](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Using-Auth0-Authentication-Brokerage)
 * [Creating the AngularJS Front-End App](https://github.com/belcurv/angularjs_auth/blob/master/readme.md#Creating-the-AngularJS-Front-End-App)
