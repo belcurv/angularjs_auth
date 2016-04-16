@@ -1,8 +1,8 @@
 #### Navigation
 
-* [JSON Web Tokens](#JSON-Web-Tokens)
-* [Using Auth0 Authentication Brokerage](#Using-Auth0-Authentication-Brokerage)
-* [Creating the AngularJS Front-End App](#Creating-the-AngularJS-Front-End-App)
+* [JSON Web Tokens](#json-web-tokens)
+* [Using Auth0 Authentication Brokerage](#using-auth0-authentication-brokerage)
+* [Creating the AngularJS Front-End App](#creating-the-angularjs-front-end-app)
 * [Create a Simple NodeJS Back End with Express](#Create-a-Simple-NodeJS-Back-End-with-Express)
 * [Login and Logout](#Login-and-Logout)
 * [Sending Authenticated HTTP Requests](#Sending-Authenticated-HTTP-Requests)
