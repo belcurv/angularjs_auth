@@ -711,14 +711,18 @@ The 2nd paramter is our callback.  We first try to get a token from local storag
 ```
 
 Then we use nested conditionals to:
+
 1.  check whether 'id_token' exists:
+
     ```javascript
     var token = store.get('id_token');
     if (token) {
         // do work
     }
     ```
+
 2.  if that's true, we check if the token is NOT expired:
+
     ```javascript
     var token = store.get('id_token');
     if (token) {
@@ -727,7 +731,9 @@ Then we use nested conditionals to:
         }
     }
     ```
+    
 3.  if those are both true, we check if the user is NOT authenticated:
+    
     ```javascript
     var token = store.get('id_token');
      if (token) {
