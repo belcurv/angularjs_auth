@@ -13,7 +13,7 @@
 
 What this course is about: **How to authenticate our apps with JSON web tokens**.
 
-1.  We're going to use Auth0 to do this.  Auth0 is a service that provides a ncice login box that's ready to go.
+1.  We're going to use Auth0 to do this.  Auth0 is a service that provides a nice login box that's ready to go.
 2.  We just need to provide some functions in our app to tie into that service.
 3.  Once we've done that, we'll be able to get our users profile and token and save those in local storage.
 4.  Then we can use that token to make requests for secured resources on our server.
@@ -22,16 +22,16 @@ In traditional applications, a user needs to refresh the page to get or submit d
 
 Authentication in a traditional app looks like this:
 
-1.  A user lands on your web page and log in with their credentials (username and password)
+1.  A user lands on your web page and logs in with their credentials (username and password)
 2.  Those credentials get submitted to a server where they're checked against a database.
-3.  If the check out, a **session** is created on the backend for that user.
+3.  If they check out, a **session** is created on the backend for that user.
 4.  The server responds to the user's browser with a session cookie.
 5.  That session cookie is automatically sent to the server with each round trip request.
 6.  This is maintained until logout or until the cookie expires.
 
 The traditional session cookie approach has some issues when building modern apps.
 
-1.  AngularJS apps work very well with data APIs, and JSON data is the easiest to use.  So what we're going to do is build basically 2 separate apps: and API and a client app.  They communicate via XHR requests.  So we're going to build a RESTful API.  One core tenet: **RESTful APIs should be stateless**.  This means that when we construct an API request, that request should always return the same resouse.  This is an issue with traditional auth sessions because sessions introduce state on our server, which can affect the results returned from requests.
+1.  AngularJS apps work very well with data APIs, and JSON data is the easiest to use.  So what we're going to do is build basically 2 separate apps: an API and a client app.  They communicate via XHR requests.  So we're going to build a RESTful API.  One core tenet: **RESTful APIs should be stateless**.  This means that when we construct an API request, that request should always return the same resouse.  This is an issue with traditional auth sessions because sessions introduce state on our server, which can affect the results returned from requests.
 2.  Modern app ecosystems don't work well with sessions.  Sessions can't easily be shared - modern apps often use multiple servers, and session authentication across multiple servers is difficult.
 3.  Coockies don't flow downstream.  Our server might rely on downstream servers.
 4.  We want to be able to write an API that can be used across vaious different applications (web, mobile, etc.) and cookies aren't a good fit for this.
@@ -68,7 +68,7 @@ The JWT is attached to the Authorization header using a "bearer" scheme.  `Autho
 
 ### Using Auth0 Authentication 'Brokerage'
 
-Auth0 offloads the tricky parts of authentication for us.  Basically Auth0 has our user database.  Our app's login feature sends credentials to Autho0, and if everything checks out they'll get a JWT back from Auth0.  After that we can use the JWT to secure our own server.
+Auth0 offloads the tricky parts of authentication for us.  Basically Auth0 has our user database.  Our app's login feature sends credentials to Auth0, and if everything checks out they'll get a JWT back from Auth0.  After that we can use the JWT to secure our own server.
 
 Auth0 can do social login, multi-factor, single sign-on, passwordless login.
 
@@ -88,7 +88,7 @@ Creating our account also create a Default App.  Go the the settings area and no
 
 In Settings > Connections, there are Social login connections.  Twitter, Google, facebook, Github, etc.
 
-In Settings > Users, we can manage our users.  **Set up a use now**, with our own credentials.  Connection type will just be the default _Username-Password-Authentication_ for now.
+In Settings > Users, we can manage our users.  **Set up a user now**, with our own credentials.  Connection type will just be the default _Username-Password-Authentication_ for now.
 
 The Users dashboard is really nice.  After user creation their status will be 'pending' because Auth0 emailed them to verify their account.  Nice!
 
@@ -233,6 +233,7 @@ Create three subfolders: _home_, _profile_ and _toobar_.  Each needs the followi
         ```
         
     *   **toolbar.tpl.html** (the toolbar template)
+    
         ```
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -247,6 +248,7 @@ Create three subfolders: _home_, _profile_ and _toobar_.  Each needs the followi
                 <md-button>Logout</md-button>
             </div>
         </md-toolbar>
+        ```
 
 Then we need to add references to these new files in index.html:
 
@@ -366,7 +368,7 @@ Now the _private_ route is protected by our middleware, which requires that an a
 
 ### Login and Logout
 
-Now we return to the Angular app.  Again, we're using Auth0's 'Lock' widget - more about it here: https://auth0.com/lock.  It's a login box we can use without doing any code.
+Now we return to the Angular app.  Again, we're using Auth0's 'Lock' widget - more about it here: https://auth0.com/lock.  It's a login box we can use without writing any code.
 
 To use it, we use **authProvider**, which we pulled in in our `.config`.  `authProvider.init` takes a configuration object, which takes:
 
@@ -380,7 +382,7 @@ Adding this to app.js:
 
         authProvider.init({
             domain  : 'belcurv-auth.auth0.com',
-            clientID: 'z21JLgCKTTXPTpjhUSREflDexnHrheuz'
+            clientID: 'supersecretclientid'
         });
 
         jwtInterceptorProvider.tokenGetter = function (store) {
@@ -507,7 +509,7 @@ We also added the ui-route state routing handler to the 'Profile' button.  It wi
 
 Now we need Angular to send the authenticated token with HTTP requests.  Ryan tests requests using Postman.  He manually attaches an Authorization header to a GET request in Postman.  Create a header key "Authorization" and value "Bearer", and then literally copies the token from Chrome and pastes it into Postman.  Sort of like this:
 
-Authorization | Bearer NTcwOWM0ODU0MjJiODYwNjQyODA0MjYyIiwiYXVkIjoiejIxSkx
+Authorization | Bearer jdjdjUJSMDUASMD8Jjdja83ms92mJlkld9djnja9
 
 Sending this request to a private endpoint succeeds.  
 
@@ -522,7 +524,7 @@ Back in `/public/js/app.js`:
         
         authProvider.init({
             domain  : 'belcurv-auth.auth0.com',
-            clientID: 'z21JLgCKTTXPTpjhUSREflDexnHrheuz'
+            clientID: 'supersecretclientid'
         });
 
         jwtInterceptorProvider.tokenGetter = function (store) {
